@@ -1,0 +1,29 @@
+
+# Виртуальное окружение Python
+.venv/
+venv/
+env/
+
+# Переменные окружения и секреты
+.env
+.env.*
+!.env.example
+
+# Скомпилированные файлы Python
+__pycache__/
+*.py[cod]
+
+# Резервные копии PostgreSQL
+*.backup
+*.dump
+*.bak
+
+# Логи
+*.log
+
+# Служебные файлы Windows
+Thumbs.db
+Desktop.ini
+
+# Настройки локального редактора
+.vscode/

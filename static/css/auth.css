@@ -1,0 +1,219 @@
+
+/* LifeFocus Planner - авторизация */
+.auth-page, .auth-page * {
+    box-sizing: border-box;
+    font-family: 'Ubuntu', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.auth-page { min-height: 100vh; margin: 0; background: var(--bg); color: var(--text); }
+
+/* Шапка */
+.auth-header {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 20px; min-height: 76px; padding: 12px clamp(18px, 4vw, 54px);
+    border-bottom: 1px solid var(--line); background: var(--surface);
+}
+.auth-header .brand {
+    display: inline-flex; align-items: center; gap: 10px;
+    color: var(--text); font-size: 19px; font-weight: 500; white-space: nowrap;
+}
+.auth-header .brand b { color: var(--orange); font-weight: 500; }
+.auth-header .logo {
+    display: grid; place-items: center; width: 42px; height: 42px;
+    flex-shrink: 0; border-radius: 13px; background: var(--orange);
+    color: #fff; font-size: 15px; font-weight: 700;
+}
+.auth-header-actions { display: flex; align-items: center; gap: 10px; }
+.auth-header-actions form { margin: 0; }
+
+/* Переключатель темы - без вращения */
+.auth-header .theme-button,
+.auth-header .theme-button:hover,
+.auth-header .theme-button:focus,
+.auth-header .theme-button:active {
+    display: grid; place-items: center; width: 43px; height: 43px;
+    flex-shrink: 0; padding: 0; border: 1px solid var(--line);
+    border-radius: 50%; background: var(--surface); color: var(--text);
+    cursor: pointer; transform: none !important; animation: none !important;
+    transition: border-color .2s, color .2s, background-color .2s;
+}
+.auth-header .theme-button:hover { border-color: var(--orange); color: var(--orange); }
+.auth-header .theme-button svg,
+.auth-header .theme-button:hover svg,
+.auth-header .theme-button:focus svg,
+.auth-header .theme-button:active svg {
+    display: block; width: 19px; height: 19px; fill: none;
+    stroke: currentColor; stroke-width: 1.8; stroke-linecap: round;
+    stroke-linejoin: round; transform: none !important;
+    animation: none !important; transition: none !important;
+}
+
+/* Кнопка возврата */
+.auth-header .home-link {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 43px; padding: 10px 15px; border: 1px solid var(--line);
+    border-radius: 12px; background: var(--surface); color: var(--text);
+    font-size: 14px; font-weight: 500; text-decoration: none;
+    transition: border-color .2s, color .2s, background-color .2s;
+}
+.auth-header .home-link svg {
+    width: 18px; height: 18px; flex-shrink: 0; fill: none;
+    stroke: currentColor; stroke-width: 1.8;
+    stroke-linecap: round; stroke-linejoin: round;
+}
+.auth-header .home-link:hover { border-color: var(--orange); color: var(--orange); }
+
+/* Карточка */
+.auth-main {
+    display: grid; place-items: center; min-height: calc(100vh - 76px);
+    padding: 36px 18px 48px;
+}
+.auth-card {
+    width: 100%; max-width: 450px; padding: 34px;
+    border: 1px solid var(--line); border-radius: 22px;
+    background: var(--surface); box-shadow: var(--shadow);
+}
+.auth-mark {
+    display: grid; place-items: center; width: 52px; height: 52px;
+    margin: 0 auto 18px; border-radius: 15px; background: var(--orange);
+    color: #fff; font-size: 18px; font-weight: 700; text-decoration: none;
+}
+.auth-eyebrow {
+    display: block; color: var(--orange); font-size: 11px;
+    font-weight: 700; letter-spacing: .07em; text-align: center;
+}
+.auth-card h1 {
+    margin: 12px 0 8px; color: var(--text); font-size: 29px;
+    font-weight: 500; line-height: 1.35; letter-spacing: -.025em;
+    text-align: center;
+}
+.auth-description {
+    margin: 0; color: var(--muted); font-size: 14px;
+    line-height: 1.8; text-align: center;
+}
+
+/* Переключение форм */
+.auth-switch {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 5px;
+    padding: 5px; margin: 24px 0 22px;
+    border: 1px solid var(--line); border-radius: 13px; background: var(--soft);
+}
+.auth-switch a {
+    padding: 11px 8px; border-radius: 9px; color: var(--muted);
+    font-size: 14px; text-align: center;
+    transition: color .2s, background-color .2s;
+}
+.auth-switch a:hover { color: var(--orange); }
+.auth-switch a.active {
+    background: var(--surface); color: var(--orange);
+    box-shadow: 0 2px 7px #1F29370F;
+}
+
+/* Сообщения об ошибках */
+.auth-notice {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 13px 14px; margin: 0 0 16px;
+    border: 1px solid var(--line); border-radius: 12px;
+    background: var(--soft); color: var(--text);
+    font-size: 13px; line-height: 1.65; overflow-wrap: anywhere;
+    animation: notice-appear .3s ease-out both;
+}
+.auth-notice p { flex: 1; min-width: 0; margin: 0; }
+.notice-icon {
+    display: grid; place-items: center; width: 21px; height: 21px;
+    flex: 0 0 21px; border-radius: 50%; background: #71809620;
+    color: var(--muted); font-size: 12px; font-weight: 700;
+}
+.auth-notice.error, .auth-notice.danger, .auth-notice.warning {
+    border-color: #E8B5B5; background: #FFF3F2; color: #A83E3E;
+}
+.auth-notice.error .notice-icon,
+.auth-notice.danger .notice-icon,
+.auth-notice.warning .notice-icon { background: #B83D3D; color: #fff; }
+.auth-notice.success { border-color: #A9DCC0; background: #EFFAF3; color: #217A50; }
+.auth-notice.success .notice-icon { background: #259B6D; color: #fff; }
+html[data-theme="dark"] .auth-notice.error,
+html[data-theme="dark"] .auth-notice.danger,
+html[data-theme="dark"] .auth-notice.warning {
+    border-color: #754343; background: #321F22; color: #FFB6B0;
+}
+html[data-theme="dark"] .auth-notice.success {
+    border-color: #32694F; background: #192D25; color: #9BE0BA;
+}
+@keyframes notice-appear {
+    from { opacity: 0; transform: translateY(7px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Поля */
+.auth-field { margin-bottom: 17px; }
+.auth-field label {
+    display: block; margin-bottom: 7px; color: var(--text);
+    font-size: 14px; font-weight: 500;
+}
+.auth-field input {
+    display: block; width: 100%; min-height: 48px; padding: 12px 14px;
+    border: 1px solid var(--line); border-radius: 12px;
+    outline: none; background: var(--bg); color: var(--text);
+    font-size: 14px; transition: border-color .2s, box-shadow .2s;
+}
+.auth-field input::placeholder { color: var(--muted); opacity: .8; }
+.auth-field input:focus {
+    border-color: var(--orange); box-shadow: 0 0 0 3px #FF6B351A;
+}
+.auth-field input.is-invalid {
+    border-color: #D94A45; box-shadow: 0 0 0 3px #D94A451F;
+}
+.auth-field input.is-invalid:focus { border-color: #D94A45; }
+.auth-field .field-error {
+    display: block; margin-top: 7px; color: #B83D3D;
+    font-size: 12px; line-height: 1.5;
+}
+html[data-theme="dark"] .auth-field .field-error { color: #FFB6B0; }
+html[data-theme="dark"] .auth-field input.is-invalid { border-color: #FF817A; }
+
+/* Кнопка отправки */
+.auth-submit {
+    display: flex; align-items: center; justify-content: center;
+    width: 100%; min-height: 49px; padding: 12px 18px; margin-top: 5px;
+    border: 0; border-radius: 13px; background: var(--orange);
+    color: #fff; font-size: 15px; font-weight: 500; cursor: pointer;
+    transition: background-color .2s, box-shadow .2s;
+}
+.auth-submit:hover { background: var(--orange-hover); box-shadow: 0 4px 12px #FF6B3520; }
+.auth-submit:active { box-shadow: none; }
+
+/* Ссылки и нижняя подпись */
+.auth-tail { margin: 20px 0 0; color: var(--muted); font-size: 14px; text-align: center; }
+.auth-tail a { color: var(--orange); font-weight: 500; }
+.auth-tail a:hover { text-decoration: underline; }
+.auth-bottom-note {
+    padding-top: 17px; margin-top: 22px; border-top: 1px solid var(--line);
+    color: var(--muted); font-size: 12px; line-height: 1.7; text-align: center;
+}
+
+/* Адаптация */
+@media (max-width: 600px) {
+    .auth-header { min-height: 70px; padding: 11px 14px; gap: 8px; }
+    .auth-header .brand { gap: 7px; font-size: 14px; }
+    .auth-header .logo { width: 35px; height: 35px; border-radius: 10px; }
+    .auth-header-actions { gap: 7px; }
+    .auth-header .theme-button { width: 38px; height: 38px; }
+    .auth-header .home-link { min-height: 38px; padding: 8px 10px; gap: 5px; font-size: 12px; }
+    .auth-header .home-link svg { width: 16px; height: 16px; }
+    .auth-main { min-height: calc(100vh - 70px); padding: 24px 14px 32px; }
+    .auth-card { padding: 25px 20px; border-radius: 19px; }
+    .auth-card h1 { font-size: 26px; }
+}
+@media (max-width: 360px) {
+    .auth-header .brand { gap: 5px; font-size: 12px; }
+    .auth-header .brand b { display: none; }
+    .auth-header .home-link { padding: 8px; }
+    .auth-card { padding-inline: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .auth-notice { animation: none; }
+    .auth-header .theme-button, .auth-header .home-link,
+    .auth-submit, .auth-switch a { transition: none; }
+}

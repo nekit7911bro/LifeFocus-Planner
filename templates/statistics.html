@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html lang="ru" data-theme="{{ theme }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Статистика — LifeFocus Planner</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<header class="header">
+    <div class="container header-inner">
+        <a class="brand" href="{{ url_for('home') }}"><span class="brand-logo">L</span>LifeFocus <span>Planner</span></a>
+        <nav class="navigation">
+            <a class="nav-link" href="{{ url_for('home') }}">Мои задачи</a>
+            <a class="nav-link" href="{{ url_for('home') }}#calendar">Календарь</a>
+            <a class="nav-link active" href="{{ url_for('statistics') }}">Статистика</a>
+        </nav>
+        <div class="header-actions">
+            <span class="username">{{ session.get('username', '') }}</span>
+            <form method="post" action="{{ url_for('toggle_theme') }}">
+                <input type="hidden" name="next" value="/statistics">
+                <button class="theme-toggle" type="submit" title="Сменить тему">{{ '☀' if theme == 'dark' else '☾' }}</button>
+            </form>
+            <form method="post" action="{{ url_for('logout') }}"><button class="btn btn-outline btn-small" type="submit">Выйти</button></form>
+        </div>
+    </div>
+</header>
+
+<main class="container page">
+    <section class="page-heading">
+        <div><span class="eyebrow">Твой прогресс</span><h1>Статистика</h1><p>Каждая завершённая задача — повод собой гордиться.</p></div>
+        <a class="btn btn-outline" href="{{ url_for('home') }}">← Мои задачи</a>
+    </section>
+
+    <!-- Общие показатели -->
+    <section class="metrics">
+        <article class="metric"><span>Всего задач</span><strong>{{ stats.total }}</strong><small>За всё время</small></article>
+        <article class="metric"><span>Новые</span><strong>{{ stats.new_count }}</strong><small>Ждут начала</small></article>
+        <article class="metric"><span>В работе</span><strong>{{ stats.active_count }}</strong><small>В процессе</small></article>
+        <article class="metric"><span>Выполнено</span><strong>{{ stats.done_count }}</strong><small>Уже завершено</small></article>
+    </section>
+
+    <!-- Прогресс -->
+    <section class="report-grid">
+        <article class="report-card">
+            <span class="eyebrow">Результаты</span>
+            <h2>Общий прогресс</h2>
+            <p>Сколько задач ты уже выполнил.</p>
+            <div class="progress-header"><strong>{{ stats.percent }}%</strong><span>{{ stats.done_count }} из {{ stats.total }}</span></div>
+            <progress value="{{ stats.percent }}" max="100">{{ stats.percent }}%</progress>
+            <p class="report-note">
+                {% if stats.total == 0 %}Создай первую задачу, чтобы начать отслеживать прогресс.
+                {% elif stats.percent == 100 %}Все задачи выполнены. Отличная работа!
+                {% else %}Продолжай в своём темпе — прогресс уже есть.{% endif %}
+            </p>
+        </article>
+        <article class="report-card">
+            <span class="eyebrow">Обзор</span>
+            <h2>Состояние задач</h2>
+            <p>Актуальная информация по всем делам.</p>
+            <div class="report-row"><span>Новые</span><strong>{{ stats.new_count }}</strong></div>
+            <div class="report-row"><span>В работе</span><strong>{{ stats.active_count }}</strong></div>
+            <div class="report-row"><span>Выполнены</span><strong>{{ stats.done_count }}</strong></div>
+            <div class="report-row"><span>Просрочены</span><strong class="danger">{{ stats.overdue_count }}</strong></div>
+        </article>
+    </section>
+
+    <!-- Категории -->
+    <section class="report-card category-report">
+        <div class="section-heading"><div><h2>Задачи по категориям</h2><p>Как распределяются твои дела.</p></div></div>
+        {% for category in category_stats %}
+        <div class="report-row"><span><i class="category-dot"></i>{{ category.name }}</span><strong>{{ category.total }}</strong></div>
+        {% else %}
+        <p>Пока нет задач для отображения.</p>
+        {% endfor %}
+    </section>
+
+    <div class="bottom-actions">
+        <a class="btn btn-outline" href="{{ url_for('home') }}">Вернуться к задачам</a>
+        <a class="btn btn-primary" href="{{ url_for('create_task') }}">＋ Новая задача</a>
+    </div>
+</main>
+</body>
+</html>

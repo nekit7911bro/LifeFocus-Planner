@@ -1,0 +1,177 @@
+
+<!doctype html>
+<html lang="ru" data-theme="{{ theme }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LifeFocus Planner – Планируй с комфортом</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+</head>
+<body>
+
+<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true">
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5 8.5 8.5 0 1 0 20.5 14.5Z"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 9h7M9 12h7M9 15h4"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M16 3v4M8 3v4M3 10h18m-12 4 2 2 4-4"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 19V10h4v9M10 19V5h4v14M16 19v-7h4v7"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4 4"/></symbol>
+    <symbol id="i-target" viewBox="0 0 24 24"><circle cx="11" cy="13" r="8"/><circle cx="11" cy="13" r="4"/><path d="m11 13 9-9m-5 0h5v5"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 1 4 17.5Z"/><path d="M4 17.5A2.5 2.5 0 0 1 6.5 15H20M8 7h7"/></symbol>
+    <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5 5-2Z"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.8 8.8c0 5.1-8.8 11-8.8 11s-8.8-5.9-8.8-11A4.8 4.8 0 0 1 12 6.4a4.8 4.8 0 0 1 8.8 2.4Z"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5m-18 5 9 5 9-5"/></symbol>
+</svg>
+
+<header class="header">
+    <a class="brand" href="{{ url_for('index') }}" aria-label="LifeFocus Planner – главная">
+        <span class="logo">LF</span>
+        <span>LifeFocus <b>Planner</b></span>
+    </a>
+    <nav aria-label="Основная навигация">
+        <a href="#features">Возможности</a>
+        <a href="#about">О проекте</a>
+    </nav>
+    <div class="header-actions">
+        <form method="post" action="{{ url_for('toggle_theme') }}">
+            <input type="hidden" name="next" value="/">
+            <button class="theme-button" type="submit" aria-label="Переключить тему">
+                <svg class="ui-icon">
+                    <use href="{{ '#i-sun' if theme == 'dark' else '#i-moon' }}"/>
+                </svg>
+            </button>
+        </form>
+        <a class="button button-light" href="{{ url_for('login') }}">Войти</a>
+        <a class="button button-primary" href="{{ url_for('register') }}">Регистрация</a>
+    </div>
+</header>
+
+<main>
+    <section class="hero">
+        <div class="hero-copy">
+            <h1 aria-label="Меньше хаоса – больше результата">
+                <span class="typing-line line-one">Меньше хаоса –</span><br>
+                <span class="typing-line line-two accent">больше результата!</span>
+            </h1>
+            
+            <p class="hero-description">
+                Собери учёбу, дедлайны и личные планы в одном пространстве.
+                Держи сроки под контролем и оставляй больше времени
+                для того, что действительно важно.
+            </p>
+            <div class="hero-actions">
+                <a class="button button-primary button-large" href="{{ url_for('register') }}">
+                    Начать планировать
+                    <svg class="ui-icon"><use href="#i-arrow"/></svg>
+                </a>
+            </div>
+        </div>
+
+        <div class="preview">
+            <div class="preview-head">
+                <span class="logo logo-small">LF</span>
+                <strong>Мой план</strong>
+                <span class="preview-date">На сегодня</span>
+            </div>
+            <div class="preview-summary">
+                <span class="preview-symbol"><svg class="ui-icon"><use href="#i-target"/></svg></span>
+                <div><strong>Всё под контролем</strong><small>Каждый шаг имеет значение</small></div>
+            </div>
+            <article class="preview-task done">
+                <span class="task-symbol"><svg class="ui-icon"><use href="#i-check"/></svg></span>
+                <div><strong>Подготовить конспект</strong><small>Учёба · Выполнена</small></div>
+                <span class="preview-status">Готово</span>
+            </article>
+            <article class="preview-task active">
+                <span class="task-symbol"><svg class="ui-icon"><use href="#i-book"/></svg></span>
+                <div><strong>Сдать лабораторную</strong><small>Учёба · В работе</small></div>
+                <span class="preview-status">В работе</span>
+            </article>
+            <article class="preview-task new">
+                <span class="task-symbol"><svg class="ui-icon"><use href="#i-calendar"/></svg></span>
+                <div><strong>Вечерняя тренировка</strong><small>Личное · Новая</small></div>
+                <span class="preview-status">Новая</span>
+            </article>
+            <div class="preview-footer">Три дела. Один шаг за раз.</div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="section-heading">
+            <h2>Порядок начинается здесь</h2>
+            <p>Инструменты для комфортного планирования каждого дня</p>
+        </div>
+        <div class="feature-grid">
+            <article class="feature-card">
+                <span class="feature-icon orange"><svg class="ui-icon"><use href="#i-list"/></svg></span>
+                <h3>Управление задачами</h3>
+                <p>Создавай задачи, редактируй их, меняй статусы и отмечай выполненные дела.</p>
+            </article>
+            <article class="feature-card">
+                <span class="feature-icon green"><svg class="ui-icon"><use href="#i-calendar"/></svg></span>
+                <h3>Удобный календарь</h3>
+                <p>Планируй дела по датам, следи за сроками и не забывай о важных событиях.</p>
+            </article>
+            <article class="feature-card">
+                <span class="feature-icon purple"><svg class="ui-icon"><use href="#i-chart"/></svg></span>
+                <h3>Контроль прогресса</h3>
+                <p>Смотри статистику выполнения и понимай, сколько дел уже позади.</p>
+            </article>
+            <article class="feature-card">
+                <span class="feature-icon orange"><svg class="ui-icon"><use href="#i-search"/></svg></span>
+                <h3>Поиск и фильтры</h3>
+                <p>Находи задачи по названию, категории и текущему статусу.</p>
+            </article>
+            <article class="feature-card">
+                <span class="feature-icon green"><svg class="ui-icon"><use href="#i-clock"/></svg></span>
+                <h3>Контроль дедлайнов</h3>
+                <p>Устанавливай сроки выполнения и заранее планируй свою нагрузку.</p>
+            </article>
+            <article class="feature-card">
+                <span class="feature-icon purple"><svg class="ui-icon"><use href="#i-target"/></svg></span>
+                <h3>Твой личный ритм</h3>
+                <p>Организуй учёбу, тренировки и личные планы в одном пространстве.</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="closing" id="about">
+        <div class="about-copy">
+            <span class="eyebrow">ИДЕЯ ПРОЕКТА</span>
+            <h2>Планирование должно освобождать время, а не отнимать его.</h2>
+            <p>LifeFocus Planner создан как учебный проект для студентов, которым важно сохранять ясность в повседневных делах. Его идея проста: сделать планирование понятным, спокойным и доступным, чтобы можно было сосредоточиться на самом важном, а не на попытках удержать всё в памяти.</p>
+            <p>В основе проекта – внимание к удобству, визуальному комфорту и понятной организации информации.</p>
+        </div>
+        <div class="about-principles">
+            <article class="principle">
+                <span class="feature-icon orange"><svg class="ui-icon"><use href="#i-compass"/></svg></span>
+                <div><h3>Ясность</h3><p>Ничего лишнего – только понятная структура и спокойная визуальная среда.</p></div>
+            </article>
+            <article class="principle">
+                <span class="feature-icon green"><svg class="ui-icon"><use href="#i-heart"/></svg></span>
+                <div><h3>Комфорт</h3><p>Читаемый текст, мягкие оттенки и пространство, в котором приятно работать.</p></div>
+            </article>
+            <article class="principle">
+                <span class="feature-icon purple"><svg class="ui-icon"><use href="#i-layers"/></svg></span>
+                <div><h3>Баланс</h3><p>Учёба и личные планы могут сосуществовать в одном организованном пространстве.</p></div>
+            </article>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <a class="brand" href="{{ url_for('index') }}">
+        <span class="logo logo-small">LF</span><span>LifeFocus <b>Planner</b></span>
+    </a>
+    <span></span>
+    <span>© 2026 LifeFocus Planner</span>
+</footer>
+</body>
+</html>

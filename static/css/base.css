@@ -1,0 +1,387 @@
+
+/* LifeFocus Planner - общие стили */
+
+:root {
+    color-scheme: light;
+    --bg: #F7F8FA;
+    --surface: #FFFFFF;
+    --soft: #F1F4F7;
+    --text: #253040;
+    --muted: #68778A;
+    --line: #DFE5EC;
+    --orange: #FF6B35;
+    --orange-hover: #F45A26;
+    --green: #219B6B;
+    --purple: #8068D9;
+    --blue: #3979C5;
+    --shadow: 0 10px 35px rgba(45, 60, 80, .06);
+}
+
+html[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #101419;
+    --surface: #171D24;
+    --soft: #202833;
+    --text: #E8EDF4;
+    --muted: #A1AEC0;
+    --line: #303B48;
+    --orange: #FF783F;
+    --orange-hover: #FF8A52;
+    --green: #35BE88;
+    --purple: #A18AFF;
+    --blue: #65A8F5;
+    --shadow: 0 10px 35px rgba(0, 0, 0, .15);
+}
+
+/* Базовая типографика */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html {
+    min-height: 100%;
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color .2s ease, color .2s ease;
+}
+
+button, input, select, textarea {
+    font: inherit;
+}
+
+button, a, input, select {
+    -webkit-tap-highlight-color: transparent;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button {
+    color: inherit;
+}
+
+img, svg {
+    max-width: 100%;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 3px solid #FF6B3566;
+    outline-offset: 3px;
+}
+
+/* Общая шапка */
+.header {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    width: 100%;
+    min-height: 73px;
+    padding: 12px clamp(18px, 4vw, 54px);
+    border-bottom: 1px solid var(--line);
+    background: var(--surface);
+}
+
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    color: var(--text);
+    font-size: 19px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.brand b {
+    color: var(--orange);
+    font-weight: 500;
+}
+
+.logo {
+    display: inline-grid;
+    place-items: center;
+    width: 43px;
+    height: 43px;
+    flex-shrink: 0;
+    border-radius: 13px;
+    background: var(--orange);
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -.05em;
+}
+
+.logo-small {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    font-size: 12px;
+}
+
+.header nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+}
+
+.header nav a {
+    color: var(--muted);
+    font-size: 14px;
+    transition: color .2s ease;
+}
+
+.header nav a:hover {
+    color: var(--orange);
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-actions form {
+    display: flex;
+    margin: 0;
+}
+
+/* Универсальные кнопки */
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 43px;
+    padding: 10px 17px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface);
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color .2s ease, border-color .2s ease,
+        color .2s ease, box-shadow .2s ease;
+}
+
+.button:hover {
+    border-color: var(--orange);
+}
+
+.button-primary {
+    border-color: var(--orange);
+    background: var(--orange);
+    color: #FFFFFF;
+}
+
+.button-primary:hover {
+    border-color: var(--orange-hover);
+    background: var(--orange-hover);
+    color: #FFFFFF;
+    box-shadow: 0 4px 12px #FF6B3525;
+}
+
+.button-light:hover {
+    background: var(--soft);
+}
+
+.button:active {
+    box-shadow: none;
+}
+
+.button:disabled {
+    opacity: .55;
+    cursor: not-allowed;
+}
+
+/* Переключатель темы - без вращения */
+.theme-button {
+    display: inline-grid;
+    place-items: center;
+    width: 43px;
+    height: 43px;
+    flex-shrink: 0;
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    transform: none;
+    animation: none;
+    transition: border-color .2s ease, color .2s ease,
+        background-color .2s ease;
+}
+
+.theme-button:hover,
+.theme-button:focus,
+.theme-button:active {
+    border-color: var(--orange);
+    color: var(--orange);
+    transform: none;
+    animation: none;
+}
+
+.theme-button svg,
+.theme-button .ui-icon,
+.theme-button:hover svg,
+.theme-button:hover .ui-icon {
+    width: 19px;
+    height: 19px;
+    transform: none;
+    animation: none;
+    transition: none;
+}
+
+/* Общие поля ввода */
+input, select, textarea {
+    max-width: 100%;
+    color: var(--text);
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+select, textarea {
+    border-color: var(--line);
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: var(--muted);
+    opacity: .85;
+}
+
+input:disabled,
+select:disabled,
+textarea:disabled {
+    opacity: .65;
+    cursor: not-allowed;
+}
+
+/* Сообщения Flask */
+.flash-message,
+.flash {
+    padding: 13px 16px;
+    margin-bottom: 16px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.flash-message.error,
+.flash.error {
+    border-color: #E7B5B5;
+    background: #FFF3F2;
+    color: #A83E3E;
+}
+
+.flash-message.success,
+.flash.success {
+    border-color: #A9DCC0;
+    background: #EFFAF3;
+    color: #217A50;
+}
+
+/* Адаптация шапки */
+@media (max-width: 760px) {
+    .header {
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 12px 18px;
+    }
+
+    .header nav {
+        order: 3;
+        width: 100%;
+        justify-content: flex-start;
+        gap: 20px;
+        overflow-x: auto;
+    }
+
+    .header-actions {
+        gap: 7px;
+        margin-left: auto;
+    }
+
+    .brand {
+        gap: 8px;
+        font-size: 16px;
+    }
+
+    .logo {
+        width: 37px;
+        height: 37px;
+        border-radius: 11px;
+    }
+}
+
+@media (max-width: 420px) {
+    .header {
+        padding: 10px 12px;
+    }
+
+    .header nav {
+        gap: 16px;
+    }
+
+    .header nav a {
+        font-size: 13px;
+        white-space: nowrap;
+    }
+
+    .header-actions {
+        gap: 6px;
+    }
+
+    .header-actions .button {
+        min-height: 38px;
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+
+    .theme-button {
+        width: 38px;
+        height: 38px;
+    }
+}
+
+/* Учитываем настройки доступности */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+    }
+}

@@ -1,0 +1,315 @@
+
+<!DOCTYPE html>
+<html lang="ru" data-theme="{{ theme }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LifeFocus Planner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+</head>
+<body class="dashboard-page">
+
+<!-- SVG-иконки интерфейса -->
+<svg class="svg-sprite" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="i-tasks" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="17" rx="3"/><path d="M8 9h8M8 13h8M8 17h5"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 10h18M8 14h2m4 0h2"/></symbol>
+    <symbol id="i-stats" viewBox="0 0 24 24"><path d="M4 20V11m6 9V4m6 16v-7m6 7H2"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 15.5A8.5 8.5 0 0 1 8.5 4 8.5 8.5 0 1 0 20 15.5Z"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19m0-14-1.5 1.5m-11 11L5 19"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+    <symbol id="i-exit" viewBox="0 0 24 24"><path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5m4-4 4-4-4-4m4 4H9"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="m4 20 4.5-1 11-11a2.1 2.1 0 0 0-3-3l-11 11L4 20ZM14.5 7.5l3 3"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3m3 0-1 13H7L6 7m4 4v5m4-5v5"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+    <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="m12 3 2 6 6 2-6 2-2 6-2-6-6-2 6-2 2-6Z"/></symbol>
+</svg>
+
+<div class="app-shell">
+
+    <!-- Боковая панель -->
+    <aside class="sidebar">
+        <a class="brand" href="{{ url_for('home') }}">
+            <span class="brand-mark">LF</span>
+            <span>LifeFocus <b>Planner</b></span>
+        </a>
+
+        <span class="sidebar-label">РАБОЧЕЕ ПРОСТРАНСТВО</span>
+
+        <nav class="sidebar-group" aria-label="Главная навигация">
+            <a class="side-link {% if view == 'tasks' %}active{% endif %}" href="{{ url_for('home', view='tasks') }}">
+                <svg class="icon"><use href="#i-tasks"/></svg><span>Мои задачи</span>
+            </a>
+            <a class="side-link {% if view == 'calendar' %}active{% endif %}" href="{{ url_for('home', view='calendar') }}">
+                <svg class="icon"><use href="#i-calendar"/></svg><span>Календарь</span>
+            </a>
+            <a class="side-link {% if view == 'stats' %}active{% endif %}" href="{{ url_for('home', view='stats') }}">
+                <svg class="icon"><use href="#i-stats"/></svg><span>Статистика</span>
+            </a>
+        </nav>
+
+        <!-- Тема и аккаунт -->
+        <div class="sidebar-bottom">
+            <form method="post" action="{{ url_for('toggle_theme') }}">
+                <input type="hidden" name="next" value="{{ url_for('home', view=view) }}">
+                <button class="side-link side-button" type="submit">
+                    <svg class="icon"><use href="{{ '#i-sun' if theme == 'dark' else '#i-moon' }}"/></svg>
+                    <span>{{ 'Светлая тема' if theme == 'dark' else 'Тёмная тема' }}<small>Изменить оформление</small></span>
+                </button>
+            </form>
+
+            <div class="sidebar-divider"></div>
+
+            <div class="profile">
+                <span class="avatar"><svg class="icon"><use href="#i-user"/></svg></span>
+                <span class="profile-name">{{ session.get('username', 'Пользователь') }}<small>Мой аккаунт</small></span>
+            </div>
+
+            <form method="post" action="{{ url_for('logout') }}">
+                <button class="side-link side-button logout-button" type="submit">
+                    <svg class="icon"><use href="#i-exit"/></svg><span>Выйти</span>
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    <!-- Основное рабочее окно -->
+    <main class="main-area">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="notice {{ category }}" role="status">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+
+        <!-- Приветственный экран -->
+        {% if view == 'welcome' %}
+        <section class="welcome-screen">
+            <div class="welcome-content">
+                <span class="welcome-emblem"><svg class="icon"><use href="#i-sparkles"/></svg></span>
+                <span class="eyebrow">LIFEFOCUS PLANNER</span>
+                <h1>С чего начнём?</h1>
+                <p>Выбери нужный раздел в боковой панели, чтобы перейти к задачам, календарю или статистике.</p>
+                <span class="welcome-caption">Твой план. Твой темп. Твои результаты.</span>
+            </div>
+        </section>
+
+        <!-- Мои задачи -->
+        {% elif view == 'tasks' %}
+        <header class="page-head">
+            <div><span class="eyebrow">МОЙ ПЛАН</span><h1>Мои задачи</h1><p>Шаг за шагом к своим целям.</p></div>
+            <a class="btn btn-primary" href="{{ url_for('create_task') }}"><svg class="icon"><use href="#i-plus"/></svg> Добавить задачу</a>
+        </header>
+
+        <!-- Поиск и фильтрация задач -->
+        <form class="filter-panel" method="get" action="{{ url_for('home') }}">
+            <input type="hidden" name="view" value="tasks">
+            <label class="search-box">
+                <svg class="icon"><use href="#i-search"/></svg>
+                <input type="search" name="q" value="{{ search }}" placeholder="Поиск по названию задачи..." aria-label="Поиск по названию">
+            </label>
+
+            <div class="filter-fields">
+                <select name="status" aria-label="Статус">
+                    <option value="">Все статусы</option>
+                    {% for status in statuses %}
+                    <option value="{{ status }}" {% if selected_status == status %}selected{% endif %}>{{ status }}</option>
+                    {% endfor %}
+                </select>
+
+                <select name="category" aria-label="Категория">
+                    <option value="">Все категории</option>
+                    {% for category in categories %}
+                    <option value="{{ category.id }}" {% if selected_category == category.id|string %}selected{% endif %}>{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+
+                <!-- Сортировка по дате и алфавиту -->
+                <select name="sort" aria-label="Сортировка">
+                    <option value="newest" {% if selected_sort == 'newest' %}selected{% endif %}>Сначала новые</option>
+                    <option value="oldest" {% if selected_sort == 'oldest' %}selected{% endif %}>Сначала старые</option>
+                    <option value="deadline" {% if selected_sort == 'deadline' %}selected{% endif %}>По дедлайну</option>
+                    <option value="title_asc" {% if selected_sort == 'title_asc' %}selected{% endif %}>По алфавиту (А—Я)</option>
+                    <option value="title_desc" {% if selected_sort == 'title_desc' %}selected{% endif %}>По алфавиту (Я—А)</option>
+                </select>
+
+                <button class="btn btn-neutral" type="submit">Применить</button>
+                <a class="btn btn-ghost" href="{{ url_for('home', view='tasks') }}">Сбросить</a>
+            </div>
+        </form>
+
+        <!-- Карточки задач -->
+        <div class="list-head"><h2>Список задач</h2><span>Найдено: {{ tasks|length }}</span></div>
+
+        <div class="task-list">
+            {% for task in tasks %}
+            {% set state = 'done' if task.status == 'Выполнена' else 'progress' if task.status == 'В работе' else 'new' %}
+            <article class="task-card task-{{ state }}">
+                <div class="task-main">
+                    <div class="task-labels">
+                        <span class="small-tag">{{ task.category_name or 'Без категории' }}</span>
+                        <span class="status-tag">{{ task.status }}</span>
+                    </div>
+                    <h3>{{ task.title }}</h3>
+                    {% if task.description %}<p class="task-desc">{{ task.description }}</p>{% endif %}
+                    <p class="task-deadline">
+                        <svg class="icon"><use href="#i-calendar"/></svg>
+                        {% if task.due_date %}До {{ task.due_date.strftime('%d.%m.%Y') }}{% else %}Без дедлайна{% endif %}
+                        {% if task.due_date and task.due_date < today and task.status != 'Выполнена' %}<span class="overdue">· Просрочено</span>{% endif %}
+                    </p>
+                </div>
+
+                <div class="task-tools">
+                    <form class="status-form" method="post" action="{{ url_for('change_status', task_id=task.id) }}">
+                        <select name="status" aria-label="Изменить статус">
+                            {% for status in statuses %}
+                            <option value="{{ status }}" {% if task.status == status %}selected{% endif %}>{{ status }}</option>
+                            {% endfor %}
+                        </select>
+                        <button class="icon-button" type="submit" aria-label="Сохранить статус"><svg class="icon"><use href="#i-check"/></svg></button>
+                    </form>
+
+                    <div class="task-actions">
+                        <a class="icon-button" href="{{ url_for('edit_task', task_id=task.id) }}" aria-label="Изменить задачу" title="Изменить"><svg class="icon"><use href="#i-edit"/></svg></a>
+                        <form method="post" action="{{ url_for('delete_task', task_id=task.id) }}" onsubmit="return confirm('Удалить эту задачу?')">
+                            <button class="icon-button delete-button" type="submit" aria-label="Удалить задачу" title="Удалить"><svg class="icon"><use href="#i-trash"/></svg></button>
+                        </form>
+                    </div>
+                </div>
+            </article>
+            {% else %}
+            <div class="empty-card">
+                <svg class="icon big-icon"><use href="#i-tasks"/></svg>
+                <h3>Задач пока нет</h3>
+                <p>Создай задачу или измени параметры фильтра.</p>
+                <a class="btn btn-primary" href="{{ url_for('create_task') }}">Создать задачу</a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Календарь -->
+        {% elif view == 'calendar' %}
+        <header class="page-head">
+            <div><span class="eyebrow">ПЛАН НА ДЕНЬ</span><h1>Календарь</h1><p>Выбирай дату и смотри запланированные дела.</p></div>
+            <a class="btn btn-neutral" href="{{ url_for('home', view='calendar', day=today.isoformat()) }}">Сегодня</a>
+        </header>
+
+        <div class="calendar-layout">
+            <section class="calendar-card">
+                <div class="calendar-head">
+                    <h2>{{ month_title }}</h2>
+                    <div class="month-controls">
+                        <a class="icon-button" href="{{ url_for('home', view='calendar', month=prev_month.strftime('%Y-%m')) }}" aria-label="Предыдущий месяц"><svg class="icon"><use href="#i-left"/></svg></a>
+                        <a class="icon-button" href="{{ url_for('home', view='calendar', month=next_month.strftime('%Y-%m')) }}" aria-label="Следующий месяц"><svg class="icon"><use href="#i-right"/></svg></a>
+                    </div>
+                </div>
+
+                <div class="calendar-grid">
+                    {% for weekday in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'] %}
+                    <span class="weekday">{{ weekday }}</span>
+                    {% endfor %}
+
+                    {% for week in weeks %}
+                        {% for number in week %}
+                            {% if number %}
+                                {% set day_date = shown_month.replace(day=number) %}
+                                <a class="day {% if day_date == today %}today{% endif %} {% if day_date == selected_day %}selected{% endif %}" href="{{ url_for('home', view='calendar', day=day_date.isoformat()) }}">
+                                    <span>{{ number }}</span>
+                                    {% if number in task_days %}<i class="event-dot"></i>{% endif %}
+                                </a>
+                            {% else %}
+                                <span class="day blank"></span>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+
+                <!-- Обозначения календаря -->
+                <div class="calendar-legend">
+                    <span><i class="legend-today"></i> Сегодня</span>
+                    <span><i class="legend-dot"></i> Есть задачи</span>
+                    <span><i class="legend-selected"></i> Выбрано</span>
+                </div>
+            </section>
+
+            <!-- Задачи выбранной даты -->
+            <section class="day-details">
+                <span class="eyebrow">ВЫБРАННАЯ ДАТА</span>
+                <h2>{{ selected_day.strftime('%d.%m.%Y') }}</h2>
+                <p>Задач на день: {{ day_tasks|length }}</p>
+
+                <div class="day-entries">
+                    {% for task in day_tasks %}
+                    {% set state = 'done' if task.status == 'Выполнена' else 'progress' if task.status == 'В работе' else 'new' %}
+                    <a class="day-entry entry-{{ state }}" href="{{ url_for('edit_task', task_id=task.id) }}">
+                        <strong>{{ task.title }}</strong><span>{{ task.status }}</span>
+                    </a>
+                    {% else %}
+                    <div class="day-empty">
+                        <svg class="icon big-icon"><use href="#i-calendar"/></svg>
+                        <strong>Свободный день</strong>
+                        <p>Пока ничего не запланировано.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <a class="btn btn-primary btn-full" href="{{ url_for('create_task', due_date=selected_day.isoformat()) }}"><svg class="icon"><use href="#i-plus"/></svg> Задача на эту дату</a>
+            </section>
+        </div>
+
+        <!-- Статистика -->
+        {% elif view == 'stats' %}
+        <header class="page-head">
+            <div><span class="eyebrow">ТВОИ РЕЗУЛЬТАТЫ</span><h1>Статистика</h1><p>Планируй, выполняй и отмечай свой прогресс.</p></div>
+        </header>
+
+        <section class="stats-grid">
+            <article class="stat-card"><span>Всего задач</span><strong>{{ stats.total }}</strong><small>Все созданные задачи</small></article>
+            <article class="stat-card stat-gray"><span>Новые</span><strong>{{ stats.new_count }}</strong><small>Ожидают начала</small></article>
+            <article class="stat-card stat-orange"><span>В работе</span><strong>{{ stats.active_count }}</strong><small>Уже выполняются</small></article>
+            <article class="stat-card stat-green"><span>Выполнено</span><strong>{{ stats.done_count }}</strong><small>Готовый результат</small></article>
+        </section>
+
+        <!-- Прогресс и контроль сроков -->
+        <section class="report-grid">
+            <article class="report-card">
+                <span class="eyebrow">ОБЩИЙ ПРОГРЕСС</span>
+                <h2>Выполнение плана</h2>
+                <div class="progress-top"><strong>{{ stats.percent }}%</strong><span>{{ stats.done_count }} из {{ stats.total }} задач</span></div>
+                <progress max="100" value="{{ stats.percent }}" aria-label="Процент выполненных задач"></progress>
+                <p class="help-text">Каждая выполненная задача приближает тебя к цели.</p>
+            </article>
+
+            <article class="report-card">
+                <span class="eyebrow">КОНТРОЛЬ СРОКОВ</span>
+                <h2>Дедлайны</h2>
+                <div class="report-line"><span>Просроченные задачи</span><b>{{ stats.overdue_count }}</b></div>
+                <div class="report-line"><span>Выполненные задачи</span><b>{{ stats.done_count }}</b></div>
+                <div class="report-line"><span>Осталось выполнить</span><b>{{ stats.total - stats.done_count }}</b></div>
+            </article>
+        </section>
+
+        <!-- Распределение задач по категориям -->
+        <section class="report-card category-report">
+            <span class="eyebrow">РАСПРЕДЕЛЕНИЕ</span>
+            <h2>Задачи по категориям</h2>
+            {% for item in category_stats %}
+            <div class="category-row">
+                <div class="category-row-head"><span>{{ item.name }}</span><b>{{ item.total }}</b></div>
+                <progress class="category-progress" value="{{ item.total }}" max="{{ stats.total if stats.total else 1 }}" aria-label="{{ item.name }}: {{ item.total }} задач"></progress>
+            </div>
+            {% else %}
+            <p>Добавь первую задачу, чтобы увидеть статистику.</p>
+            {% endfor %}
+        </section>
+        {% endif %}
+    </main>
+</div>
+</body>
+</html>

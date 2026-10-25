@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="{{ theme|default(session.get('theme', 'light')) }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% set is_register = mode|default('') == 'register' or request.endpoint == 'register' %}
+    <title>{% if is_register %}Регистрация{% else %}Вход{% endif %} – LifeFocus Planner</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+</head>
+<body class="auth-page">
+
+<header class="auth-header">
+    <a class="brand" href="{{ url_for('index') }}" aria-label="LifeFocus Planner">
+        <span class="logo">LF</span>
+        <span>LifeFocus <b>Planner</b></span>
+    </a>
+
+    <div class="auth-header-actions">
+        <form method="post" action="{{ url_for('toggle_theme') }}">
+            <input type="hidden" name="next" value="{{ request.path }}">
+            <button class="theme-button" type="submit"
+                    aria-label="Переключить тему" title="Переключить тему">
+                {% if theme|default(session.get('theme', 'light')) == 'dark' %}
+                <svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="12" r="4"></circle>
+                    <path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path>
+                </svg>
+                {% else %}
+                <svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5 8.5 8.5 0 1 0 20.5 14.5Z"></path>
+                </svg>
+                {% endif %}
+            </button>
+        </form>
+
+        <a class="home-link" href="{{ url_for('index') }}">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M19 12H5m7 7-7-7 7-7"></path>
+            </svg>
+            На главную
+        </a>
+    </div>
+</header>
+
+<main class="auth-main">
+    <section class="auth-card">
+        {% if is_register %}
+        <h1>Создай аккаунт</h1>
+        <p class="auth-description">
+            Начни планировать дела и управлять своим временем.
+        </p>
+        {% else %}
+        <h1>С возвращением!</h1>
+        <p class="auth-description">
+            Войди в аккаунт, чтобы продолжить работу с задачами.
+        </p>
+        {% endif %}
+
+        <div class="auth-switch">
+            <a href="{{ url_for('login') }}"
+               class="{% if not is_register %}active{% endif %}"
+               {% if not is_register %}aria-current="page"{% endif %}>
+                Вход
+            </a>
+            <a href="{{ url_for('register') }}"
+               class="{% if is_register %}active{% endif %}"
+               {% if is_register %}aria-current="page"{% endif %}>
+                Регистрация
+            </a>
+        </div>
+
+        {% if error is defined and error %}
+        <div class="auth-notice error" role="alert" aria-live="polite">
+            <span class="notice-icon" aria-hidden="true">!</span>
+            <p>{{ error }}</p>
+        </div>
+        {% endif %}
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                {% set kind = 'success' if category in ['success', 'ok'] else ('error' if category in ['error', 'danger', 'warning', 'failed'] else 'info') %}
+                <div class="auth-notice {{ kind }}"
+                     role="{% if kind == 'error' %}alert{% else %}status{% endif %}"
+                     aria-live="polite">
+                    <span class="notice-icon" aria-hidden="true">
+                        {% if kind == 'success' %}✓{% elif kind == 'error' %}!{% else %}i{% endif %}
+                    </span>
+                    <p>{{ message }}</p>
+                </div>
+            {% endfor %}
+        {% endwith %}
+
+        <form method="post" action="{{ request.path }}"
+              class="auth-form" novalidate>
+            <div class="auth-field">
+                <label for="username">Имя пользователя</label>
+                <input id="username" name="username" type="text"
+                       placeholder="Введи имя пользователя"
+                       autocomplete="username" required>
+                {% if errors is defined and errors.get('username') %}
+                <small class="field-error">{{ errors.get('username') }}</small>
+                {% endif %}
+            </div>
+
+            {% if is_register %}
+            <div class="auth-field">
+                <label for="email">Электронная почта</label>
+                <input id="email" name="email" type="email"
+                       placeholder="name@example.com"
+                       autocomplete="email" required>
+                {% if errors is defined and errors.get('email') %}
+                <small class="field-error">{{ errors.get('email') }}</small>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            <div class="auth-field">
+                <label for="password">Пароль</label>
+                <input id="password" name="password" type="password"
+                       placeholder="Введи пароль"
+                       autocomplete="{% if is_register %}new-password{% else %}current-password{% endif %}"
+                       required>
+                {% if errors is defined and errors.get('password') %}
+                <small class="field-error">{{ errors.get('password') }}</small>
+                {% endif %}
+            </div>
+
+            {% if is_register %}
+            <div class="auth-field">
+                <label for="confirm_password">Повтори пароль</label>
+                <input id="confirm_password" name="confirm_password"
+                       type="password" placeholder="Повтори пароль"
+                       autocomplete="new-password" required>
+                {% if errors is defined and errors.get('confirm_password') %}
+                <small class="field-error">{{ errors.get('confirm_password') }}</small>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            <button class="auth-submit" type="submit">
+                {% if is_register %}Создать аккаунт{% else %}Войти в аккаунт{% endif %}
+            </button>
+        </form>
+
+        <p class="auth-tail">
+            {% if is_register %}
+            Уже есть аккаунт? <a href="{{ url_for('login') }}">Войти</a>
+            {% else %}
+            Ещё нет аккаунта?
+            <a href="{{ url_for('register') }}">Зарегистрироваться</a>
+            {% endif %}
+        </p>
+
+    </section>
+</main>
+
+<script>
+(() => {
+    const form = document.querySelector('.auth-form');
+    const card = document.querySelector('.auth-card');
+
+    if (!form || !card) return;
+
+    const isRegister = Boolean(form.querySelector('[name="email"]'));
+    let notice = null;
+
+    function showError(message, field) {
+        if (notice) notice.remove();
+
+        notice = document.createElement('div');
+        notice.className = 'auth-notice error client-validation-notice';
+        notice.setAttribute('role', 'alert');
+        notice.setAttribute('aria-live', 'polite');
+
+        const icon = document.createElement('span');
+        icon.className = 'notice-icon';
+        icon.setAttribute('aria-hidden', 'true');
+        icon.textContent = '!';
+
+        const text = document.createElement('p');
+        text.textContent = message;
+        notice.append(icon, text);
+
+        card.querySelector('.auth-switch').insertAdjacentElement('afterend', notice);
+
+        form.querySelectorAll('.is-invalid').forEach(input => {
+            input.classList.remove('is-invalid');
+            input.removeAttribute('aria-invalid');
+        });
+
+        if (field) {
+            field.classList.add('is-invalid');
+            field.setAttribute('aria-invalid', 'true');
+            field.focus();
+        }
+    }
+
+    form.addEventListener('input', event => {
+        const field = event.target;
+
+        if (field.matches('input')) {
+            field.classList.remove('is-invalid');
+            field.removeAttribute('aria-invalid');
+        }
+
+        if (notice) {
+            notice.remove();
+            notice = null;
+        }
+    });
+
+    form.addEventListener('submit', event => {
+        const username = form.querySelector('[name="username"]');
+        const email = form.querySelector('[name="email"]');
+        const password = form.querySelector('[name="password"]');
+        const confirm = form.querySelector('[name="confirm_password"]');
+
+        const fields = [username, email, password, confirm].filter(Boolean);
+
+        for (const field of fields) {
+            if (!field.value.trim()) {
+                event.preventDefault();
+                showError('Заполни все обязательные поля', field);
+                return;
+            }
+        }
+
+        if (isRegister && email &&
+            (!email.checkValidity() ||
+             !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim()))) {
+            event.preventDefault();
+            showError(
+                'Введи корректный адрес электронной почты, например name@example.com',
+                email
+            );
+            return;
+        }
+
+        if (isRegister && confirm && password.value !== confirm.value) {
+            event.preventDefault();
+            showError('Пароли не совпадают. Проверь оба поля', confirm);
+        }
+    });
+})();
+</script>
+</body>
+</html>
